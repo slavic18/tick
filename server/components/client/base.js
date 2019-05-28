@@ -1,42 +1,53 @@
-const socketEvents = require("@constants/socketEvents");
+const uuid = require("uuid");
 const EventEmitter = require("events");
-class ClientPlayer extends EventEmitter {
-  constructor(socket) {
+const socketEvents = require("@constants/socketEvents");
+class Connection extends EventEmitter {
+  constructor(socket, options) {
     super();
-
     this._socket = socket;
+    this.options = Object.assign({}, this.defaultOptions, options);
+    // bind this
     this.onMessage = this.onMessage.bind(this);
+    this.onError = this.onError.bind(this);
+    this.onClose = this.onClose.bind(this);
+    // attach listeners
+    this._socket.on(this.options.events.NEW_MESSAGE, this.onMessage);
+    this._socket.on(this.options.events.ERROR, this.onError);
+    this._socket.on(this.options.events.CLOSE, this.onClose);
+  }
 
-    this._socket.on(socketEvents.NEW_MESSAGE, this.onMessage);
+  get defaultOptions() {
+    return {
+      events: {
+        ERROR: "ERROR",
+        NEW_MESSAGE: "NEW_MESSAGE",
+        CLOSE: "CLOSE"
+      }
+    };
+  }
+
+  encodeMessage(message) {
+    return JSON.stringify(message);
+  }
+  decodeMessage(message) {
+    try {
+      const decodedMessage = JSON.parse(message);
+      return decodedMessage;
+    } catch (e) {
+      throw new Error("error on parsing message");
+    }
   }
 
   sendMessage(message) {
-    this._socket.sendMessage(message);
-  }
-  onMessage(message) {
-    switch (message.type) {
-      case socketEvents.GET_GAMES_LIST:
-        this.emit(socketEvents.RECEIVED_GAMES_LIST, {
-          rooms: message.rooms
-        });
-        break;
-    }
-    // console.log(message.type);
-    // console.log("received: new message", message);
+    process.stdout.write(`user:${this.id} NEW_MESSAGE: ${message}\r\n`);
   }
 
-  createNewGame() {
-    this.sendMessage({ type: socketEvents.CREATE_NEW_GAME });
+  onMessage(message) {
+    const decodedMessage = this.decodeMessage(message);
+    this.emit(socketEvents.NEW_MESSAGE, decodedMessage);
   }
-  fetchListOfGames() {
-    this.sendMessage({ type: socketEvents.GET_GAMES_LIST });
-  }
-  joinGameRoom(roomId) {
-    this.sendMessage({
-      type: socketEvents.JOIN_GAME,
-      roomId
-    });
-  }
+  onError() {}
+  onClose() {}
 }
 
-module.exports = ClientPlayer;
+module.exports = Connection;

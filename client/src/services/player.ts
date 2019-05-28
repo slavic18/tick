@@ -16,6 +16,8 @@ export default class ClientPlayer extends EventEmitter {
   }
 
   onMessage = (message: any) => {
+    console.log("received: new message", message);
+
     switch (message.type) {
       case SocketEvents.GET_GAMES_LIST:
         this.emit(SocketEvents.RECEIVED_GAMES_LIST, {
@@ -26,10 +28,9 @@ export default class ClientPlayer extends EventEmitter {
         this.emit(SocketEvents.JOIN_GAME);
         break;
       case SocketEvents.UPDATE_BOARD:
-        this.emit(SocketEvents.UPDATE_BOARD);
+        this.emit(SocketEvents.UPDATE_BOARD, { board: message.board });
         break;
     }
-    console.log("received: new message", message);
   };
 
   createNewGame = () => {

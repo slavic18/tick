@@ -45,10 +45,12 @@ export default function Game() {
     // console.log(response);
   };
   const onJoinGame = () => {
-    console.log("hererre");
-    console.log(playerInstance!.getBoard());
     setBoard(playerInstance!.getBoard());
     setStatus(GameStatuses.GAME);
+  };
+
+  const onUpdateBoard = ({ board }: { board: any }) => {
+    setBoard(board);
   };
 
   React.useEffect(() => {
@@ -56,6 +58,7 @@ export default function Game() {
       // attach socket listeners
       playerInstance.on(SocketEvents.RECEIVED_GAMES_LIST, onReceivingGamesList);
       playerInstance.on(SocketEvents.JOIN_GAME, onJoinGame);
+      playerInstance.on(SocketEvents.UPDATE_BOARD, onUpdateBoard);
     }
   }, [isInitialized]);
 

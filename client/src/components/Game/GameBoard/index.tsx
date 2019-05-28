@@ -11,15 +11,17 @@ const GameBoard: React.FC<{
       {board.map((row: any, rowIndex: number) => {
         return (
           <div className="row" key={rowIndex}>
-            {row.map((column: any, columnIndex: number) => (
-              <div
-                className="square"
-                key={`${rowIndex}_${columnIndex}`}
-                onClick={() => onClick(rowIndex, columnIndex)}
-              >
-                {column}
-              </div>
-            ))}
+            {row.map(
+              (column: { symbol: string } | undefined, columnIndex: number) => (
+                <div
+                  className="square"
+                  key={`${rowIndex}_${columnIndex}`}
+                  onClick={() => onClick(rowIndex, columnIndex)}
+                >
+                  {column ? column.symbol : null}
+                </div>
+              )
+            )}
           </div>
         );
       })}

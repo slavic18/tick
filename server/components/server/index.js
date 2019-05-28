@@ -2,10 +2,7 @@ const net = require("net");
 const http = require("http");
 const WebSocket = require("ws");
 const config = require("@configs");
-const {
-  TcpConnection,
-  WebsocketConnection
-} = require("@components/connection");
+const { TcpClient, WebsocketClient } = require("@components/client");
 const GameWorld = require("@components/gameWorld");
 
 const router = require("@router/index");
@@ -17,12 +14,12 @@ class Server {
     this.handleTcpConnection = this.handleTcpConnection.bind(this);
   }
   handleWebsocketConnection(ws) {
-    const connectionInstance = new WebsocketConnection(ws);
+    const connectionInstance = new WebsocketClient(ws);
     this.gameWorld.addNewClient(connectionInstance);
   }
 
   handleTcpConnection(socket) {
-    const connectionInstance = new TcpConnection(socket);
+    const connectionInstance = new TcpClient(socket);
     this.gameWorld.addNewClient(connectionInstance);
   }
 

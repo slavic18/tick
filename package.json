@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
     "postinstall": "link-module-alias",
-    "start": "node server/components/client/cli.js"
+    "start_cli_client": "node server/cli/cli.js",
+    "start_web_client": "",
+    "start_server": "node server/index.js"
   },
   "_moduleAliases": {
     "@root": ".",
