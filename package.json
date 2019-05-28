@@ -6,14 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "start": "node src/components/cli/index.js"
+    "postinstall": "link-module-alias",
+    "start": "node server/components/client/cli.js"
   },
   "_moduleAliases": {
     "@root": ".",
-    "@views": "src/views",
-    "@models": "src/models",
-    "@components": "src/components",
-    "@configs": "./src/configs"
+    "@views": "server/views",
+    "@models": "server/models",
+    "@components": "server/components",
+    "@configs": "./server/configs",
+    "@constants": "./server/constants",
+    "@router": "./server/router"
   },
   "dependencies": {
     "ejs": "^2.6.1",
@@ -25,5 +28,8 @@
     "ws": "^7.0.0"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "link-module-alias": "^1.2.0"
+  }
 }

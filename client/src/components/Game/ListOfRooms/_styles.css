@@ -1,0 +1,12 @@
+.initialscreen {
+  padding: 4rem;
+}
+
+.btn.initialscreen__button {
+  display: block;
+  max-width: 30rem;
+  min-width: 30rem;
+  margin-bottom: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
