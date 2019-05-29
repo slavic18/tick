@@ -20,6 +20,15 @@ class ClientPlayer extends EventEmitter {
           rooms: message.rooms
         });
         break;
+      case socketEvents.JOIN_GAME:
+        this.emit(socketEvents.JOIN_GAME);
+        break;
+      case socketEvents.CREATED_NEW_GAME:
+        this.emit(socketEvents.CREATED_NEW_GAME);
+        break;
+      case socketEvents.UPDATE_BOARD:
+        this.emit(socketEvents.UPDATE_BOARD, { board: message.board });
+        break;
     }
     // console.log(message.type);
     // console.log("received: new message", message);
@@ -36,6 +45,17 @@ class ClientPlayer extends EventEmitter {
       type: socketEvents.JOIN_GAME,
       roomId
     });
+  }
+
+  move(x, y) {
+    this.sendMessage({
+      type: socketEvents.PLAYER_MOVE,
+      x,
+      y
+    });
+  }
+  getBoard() {
+    return [[null, null, null], [null, null, null], [null, null, null]];
   }
 }
 

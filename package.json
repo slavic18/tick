@@ -8,7 +8,7 @@
     "tsc": "tsc",
     "postinstall": "link-module-alias",
     "start_cli_client": "node server/cli/cli.js",
-    "start_web_client": "",
+    "start_web_client": "npm start --prefix client/",
     "start_server": "node server/index.js"
   },
   "_moduleAliases": {

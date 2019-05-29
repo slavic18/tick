@@ -6,7 +6,6 @@ const EventEmitter = require("events");
 export default class ClientPlayer extends EventEmitter {
   constructor(socket: WebsocketInstance) {
     super();
-
     this._socket = socket;
     this._socket.on(SocketEvents.NEW_MESSAGE, this.onMessage);
   }
@@ -16,8 +15,6 @@ export default class ClientPlayer extends EventEmitter {
   }
 
   onMessage = (message: any) => {
-    console.log("received: new message", message);
-
     switch (message.type) {
       case SocketEvents.GET_GAMES_LIST:
         this.emit(SocketEvents.RECEIVED_GAMES_LIST, {
@@ -26,6 +23,9 @@ export default class ClientPlayer extends EventEmitter {
         break;
       case SocketEvents.JOIN_GAME:
         this.emit(SocketEvents.JOIN_GAME);
+        break;
+      case SocketEvents.CREATED_NEW_GAME:
+        this.emit(SocketEvents.CREATED_NEW_GAME);
         break;
       case SocketEvents.UPDATE_BOARD:
         this.emit(SocketEvents.UPDATE_BOARD, { board: message.board });

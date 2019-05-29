@@ -4,8 +4,7 @@ const Router = {
   init: async (req, res) => {
     const requestUrl = req.url;
     const splittedUrl = requestUrl.split("/");
-    console.log(splittedUrl);
-    if (splittedUrl.length > 1 && splittedUrl[1] === "static") {
+    if (splittedUrl.length > 1 && splittedUrl[1] === "public") {
       public(req, res);
     }
     if (requestUrl === "/") {

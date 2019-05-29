@@ -42,7 +42,6 @@ export default function Game() {
     }
     setRooms(rooms);
     setStatus(GameStatuses.SHOW_LIST_OF_ROOMS);
-    // console.log(response);
   };
   const onJoinGame = () => {
     setBoard(playerInstance!.getBoard());
@@ -58,6 +57,7 @@ export default function Game() {
       // attach socket listeners
       playerInstance.on(SocketEvents.RECEIVED_GAMES_LIST, onReceivingGamesList);
       playerInstance.on(SocketEvents.JOIN_GAME, onJoinGame);
+      playerInstance.on(SocketEvents.CREATED_NEW_GAME, onJoinGame);
       playerInstance.on(SocketEvents.UPDATE_BOARD, onUpdateBoard);
     }
   }, [isInitialized]);

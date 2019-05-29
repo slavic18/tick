@@ -32,7 +32,6 @@ class Player extends EventEmitter {
   }
 
   onMessage(message) {
-    console.log("message type", message.type);
     switch (message.type) {
       case socketEvents.CREATE_NEW_GAME:
         this.emit(socketEvents.CREATE_NEW_GAME, this);
@@ -50,11 +49,6 @@ class Player extends EventEmitter {
         });
         break;
     }
-    if (message === socketEvents.CREATE_NEW_GAME) {
-      this.emit(socketEvents.CREATE_NEW_GAME, this);
-    }
-
-    console.log("server_player received new message", message);
   }
   createdNewGame() {
     this.sendMessage({ type: socketEvents.CREATED_NEW_GAME });

@@ -22,7 +22,12 @@ class GameWorld {
     player.on(socketEvent.GET_GAMES_LIST, this.handleFetchGamesList);
     player.on(socketEvent.JOIN_GAME, this.handlePlayerJoinGame);
   }
-  removePlayerListeners(player) {}
+
+  removePlayerListeners(player) {
+    player.removeAllListeners(socketEvent.CREATE_NEW_GAME);
+    player.removeAllListeners(socketEvent.GET_GAMES_LIST);
+    player.removeAllListeners(socketEvent.JOIN_GAME);
+  }
 
   handleCreatingOfNewGame(player) {
     const GameInstance = new Game();
@@ -43,8 +48,8 @@ class GameWorld {
     if (!this.games.has(gameId)) {
       throw new Error(`Room this ${gameId} doesn't exist.`);
     }
-    this.games.get(gameId).addPlayer(player);
     player.joinGame();
+    this.games.get(gameId).addPlayer(player);
   }
 
   broadcastToAll(message) {

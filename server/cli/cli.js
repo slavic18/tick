@@ -1,16 +1,98 @@
 require("module-alias/register");
 const inquirer = require("inquirer");
-const config = require("@configs");
 const net = require("net");
-const ui = new inquirer.ui.BottomBar();
+const Rx = require("rxjs");
+const config = require("@configs");
 const socketEvents = require("@constants/socketEvents");
-const ClientPlayer = require("@components/client/base");
-const TcpConnection = require("@components/connection/tcp");
+const ClientPlayer = require("./base");
+const TcpConnection = require("@components/client/tcp");
+
+const ui = new inquirer.ui.BottomBar();
+const prompts = new Rx.Subject();
+
 const client = net.createConnection(
   { port: config.TCP_SERVER_PORT },
   async () => {
     const socket = new TcpConnection(client);
     const Player = new ClientPlayer(socket);
+
+    async function renderBoard({ board }) {
+      let boardMessage = board.reduce((acc, current) => {
+        acc += current.reduce((acc, current) => {
+          acc += current ? ` | ${current.symbol}| ` : " |  | ";
+          return acc;
+        }, "");
+        acc += "\r\n";
+        return acc;
+      }, "---------------------\r\n");
+
+      boardMessage += "---------------------\r\n";
+      ui.log.write(boardMessage);
+    }
+
+    function moveQuestion() {
+      return {
+        name: "keywords",
+        type: "input",
+        message: "Type comma-separated x, y values from 1 to 3 ",
+        validate: function(input) {
+          const done = this.async();
+          const splittedResponse = input.split(",");
+          try {
+            if (splittedResponse.length > 2 || splittedResponse.length < 0) {
+              throw new Error(
+                "You need to provide correct number of parameters"
+              );
+            }
+            splittedResponse.forEach(item => {
+              const preparedItem = Number(item);
+              if (typeof preparedItem === "NaN") {
+                throw new Error("You need to provide a number");
+              }
+              if (preparedItem > 3 || preparedItem < 1) {
+                throw new Error("Values could be between 1 and 3 ");
+              }
+            });
+          } catch (e) {
+            done(e.message);
+          }
+          done(null, true);
+        }
+      };
+    }
+    async function startGame() {
+      inquirer.prompt(prompts).ui.process.subscribe(
+        ({ answer }) => {
+          const [x, y] = answer.split(",");
+          Player.move(x - 1, y - 1);
+          if (answer !== "") {
+            prompts.next(moveQuestion());
+          } else {
+            prompts.complete();
+          }
+        },
+        err => {
+          console.warn(err);
+        },
+        () => {
+          console.log("Game was ended. Good bye! 👋\n");
+        }
+      );
+
+      prompts.next(moveQuestion());
+    }
+    (function subscribeToPlayerEvents() {
+      Player.on(socketEvents.RECEIVED_GAMES_LIST, async ({ rooms }) => {
+        if (rooms.length) {
+          askSelectRoomQuestion(rooms);
+        } else {
+          noRoomsQuestion();
+        }
+      });
+      Player.on(socketEvents.UPDATE_BOARD, renderBoard);
+      Player.on(socketEvents.CREATED_NEW_GAME, startGame);
+      Player.on(socketEvents.JOIN_GAME, startGame);
+    })();
 
     async function askFirstQuestion() {
       const QUESTION_NAME = "Question";
@@ -78,13 +160,5 @@ const client = net.createConnection(
       });
       Player.joinGameRoom(question[QUESTION_NAME]);
     }
-
-    Player.on(socketEvents.RECEIVED_GAMES_LIST, async ({ rooms }) => {
-      if (rooms.length) {
-        askSelectRoomQuestion(rooms);
-      } else {
-        noRoomsQuestion();
-      }
-    });
   }
 );

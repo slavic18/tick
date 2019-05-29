@@ -16,7 +16,6 @@ class TcpConnection extends Connection {
     };
   }
   sendMessage(message) {
-    super.sendMessage(message);
     const preparedMessage = this.encodeMessage(message);
     this._socket.write(preparedMessage);
   }

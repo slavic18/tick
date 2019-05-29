@@ -1,4 +1,3 @@
-const uuid = require("uuid");
 const EventEmitter = require("events");
 const socketEvents = require("@constants/socketEvents");
 class Connection extends EventEmitter {
@@ -17,13 +16,7 @@ class Connection extends EventEmitter {
   }
 
   get defaultOptions() {
-    return {
-      events: {
-        ERROR: "ERROR",
-        NEW_MESSAGE: "NEW_MESSAGE",
-        CLOSE: "CLOSE"
-      }
-    };
+    return {};
   }
 
   encodeMessage(message) {
@@ -38,14 +31,11 @@ class Connection extends EventEmitter {
     }
   }
 
-  sendMessage(message) {
-    process.stdout.write(`user:${this.id} NEW_MESSAGE: ${message}\r\n`);
-  }
-
   onMessage(message) {
     const decodedMessage = this.decodeMessage(message);
     this.emit(socketEvents.NEW_MESSAGE, decodedMessage);
   }
+  sendMessage() {}
   onError() {}
   onClose() {}
 }
