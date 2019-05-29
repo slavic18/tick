@@ -2,7 +2,6 @@ const path = require("path");
 const fs = require("fs");
 module.exports = async function(req, res) {
   const filePath = "." + req.url;
-
   const extname = String(path.extname(filePath)).toLowerCase();
   const mimeTypes = {
     ".html": "text/html",
