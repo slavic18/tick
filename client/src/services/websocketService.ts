@@ -33,7 +33,6 @@ export default class WebsocketInstance extends EventEmitter {
   };
   onMessage = (message: MessageEvent) => {
     const decodedMessage = this.decodeMessage(message.data);
-    console.log(decodedMessage);
     this.emit(SocketEvents.NEW_MESSAGE, decodedMessage);
   };
 }

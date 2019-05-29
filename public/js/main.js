@@ -55,7 +55,6 @@ class Game {
         this.renderBoard();
         break;
     }
-    console.log(decodedMessage);
   }
 
   createNewGame() {

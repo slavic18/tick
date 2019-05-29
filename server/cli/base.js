@@ -30,8 +30,6 @@ class ClientPlayer extends EventEmitter {
         this.emit(socketEvents.UPDATE_BOARD, { board: message.board });
         break;
     }
-    // console.log(message.type);
-    // console.log("received: new message", message);
   }
 
   createNewGame() {

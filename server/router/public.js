@@ -16,7 +16,6 @@ module.exports = async function(req, res) {
 
   const contentType = mimeTypes[extname] || "application/octet-stream";
 
-  console.log(filePath);
   fs.readFile(filePath, function(error, content) {
     if (error) {
       if (error.code == "ENOENT") {
