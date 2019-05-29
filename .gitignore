@@ -9,6 +9,7 @@ lerna-debug.log*
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
+.vscode/
 # Runtime data
 pids
 *.pid
@@ -30,6 +31,7 @@ coverage
 
 # Bower dependency directory (https://bower.io/)
 bower_components
+
 
 # node-waf configuration
 .lock-wscript
