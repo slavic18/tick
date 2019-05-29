@@ -4,7 +4,7 @@ const net = require("net");
 const Rx = require("rxjs");
 const config = require("@configs");
 const socketEvents = require("@constants/socketEvents");
-const ClientPlayer = require("./base");
+const ClientPlayer = require("./clientPlayer");
 const TcpConnection = require("@components/client/tcp");
 
 const ui = new inquirer.ui.BottomBar();

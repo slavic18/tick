@@ -1,6 +1,4 @@
-# Project Title
-
-Tick tack toe
+# Simple Tick tack toe app
 
 ## Getting Started
 
