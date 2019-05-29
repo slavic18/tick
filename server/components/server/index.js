@@ -5,7 +5,7 @@ const config = require("@configs");
 const { TcpClient, WebsocketClient } = require("@components/client");
 const GameWorld = require("@components/gameWorld");
 
-const router = require("@router/index");
+const router = require("@components/router");
 
 class Server {
   constructor() {
